@@ -298,7 +298,7 @@ export default function SharePage() {
           type="button"
           onClick={() => openForm()}
           aria-label="Add gift"
-          className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-5 z-30 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-600 text-2xl text-white shadow-[0_16px_40px_-12px_rgba(124,58,237,1)] transition-transform active:scale-95 sm:hidden"
+          className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-5 z-30 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-600 text-2xl text-ink-950 shadow-[0_16px_38px_-14px_rgba(211,130,26,0.85)] transition-transform active:scale-95 sm:hidden"
         >
           <PiPlusBold />
         </button>

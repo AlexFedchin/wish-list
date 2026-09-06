@@ -23,7 +23,7 @@ function PriorityMark({ priority }) {
   if (priority !== "high") return null;
   return (
     <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-brand-600/40 bg-brand-600/10 px-2.5 py-1 text-[0.6875rem] font-medium uppercase tracking-wide text-brand-300">
-      <span className="h-1.5 w-1.5 rounded-full bg-brand-400 shadow-[0_0_8px_rgba(167,139,250,0.9)]" />
+      <span className="h-1.5 w-1.5 rounded-full bg-brand-400 shadow-[0_0_8px_rgba(242,183,92,0.9)]" />
       Really wants
     </span>
   );
@@ -119,7 +119,7 @@ function ClaimButton({ item, busy, onClaim, onUnclaim, full }) {
       type="button"
       disabled={busy}
       onClick={onClaim}
-      className={`${width} inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-brand-600 px-4 text-sm font-medium text-white shadow-[0_10px_28px_-14px_rgba(124,58,237,1)] transition-colors hover:bg-brand-500 disabled:opacity-50`}
+      className={`${width} inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-brand-600 px-4 text-sm font-semibold text-ink-950 shadow-[0_10px_28px_-14px_rgba(211,130,26,1)] transition-colors hover:bg-brand-500 disabled:opacity-50`}
     >
       <PiHandbagFill /> I'll get this
     </button>
@@ -190,7 +190,7 @@ export default function WishItem({
       <SpotlightCard
         className={`h-full ${dimmed ? "opacity-65" : ""}`}
         innerClassName="flex h-full flex-col"
-        spotlightColor="rgba(139, 92, 246, 0.16)"
+        spotlightColor="rgba(231, 156, 49, 0.13)"
       >
         <ItemThumb item={item} view="grid" />
 

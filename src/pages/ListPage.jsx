@@ -44,7 +44,7 @@ function Tabs({ active, onChange }) {
             aria-current={active === id}
             className={`flex h-10 flex-1 items-center justify-center gap-2 rounded-lg px-4 text-sm font-medium transition-colors sm:flex-none ${
               active === id
-                ? "bg-ink-800 text-ink-50 shadow-[inset_0_0_0_1px_rgba(124,58,237,0.3)]"
+                ? "bg-ink-800 text-ink-50 shadow-[inset_0_0_0_1px_rgba(211,130,26,0.3)]"
                 : "text-ink-400 hover:text-ink-100"
             }`}
           >
@@ -406,7 +406,7 @@ export default function ListPage() {
           type="button"
           onClick={() => openForm()}
           aria-label="Add gift"
-          className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-5 z-30 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-600 text-2xl text-white shadow-[0_16px_40px_-12px_rgba(124,58,237,1)] transition-transform active:scale-95 sm:hidden"
+          className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-5 z-30 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-600 text-2xl text-ink-950 shadow-[0_16px_38px_-14px_rgba(211,130,26,0.85)] transition-transform active:scale-95 sm:hidden"
         >
           <PiPlusBold />
         </button>

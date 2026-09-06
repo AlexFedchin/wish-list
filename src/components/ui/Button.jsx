@@ -3,7 +3,7 @@ import { PiCircleNotchBold } from "react-icons/pi";
 
 const VARIANTS = {
   primary:
-    "bg-brand-600 text-white hover:bg-brand-500 active:bg-brand-700 shadow-[0_10px_30px_-12px_rgba(124,58,237,0.9)] hover:shadow-[0_14px_38px_-10px_rgba(124,58,237,1)]",
+    "bg-brand-600 text-ink-950 hover:bg-brand-500 active:bg-brand-700 shadow-[0_10px_28px_-14px_rgba(211,130,26,0.75)] hover:shadow-[0_14px_34px_-12px_rgba(211,130,26,0.9)]",
   secondary:
     "bg-ink-800 text-ink-100 border border-ink-650 hover:bg-ink-750 hover:border-ink-600 active:bg-ink-800",
   ghost: "text-ink-300 hover:text-ink-50 hover:bg-ink-800/80",

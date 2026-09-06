@@ -53,7 +53,7 @@ function LinkPanel({ variant, token, listTitle, onRegenerate }) {
         <span
           className={`flex h-8 w-8 items-center justify-center rounded-lg ${
             isGuest
-              ? "bg-brand-600/20 text-brand-300 shadow-[0_0_20px_-6px_rgba(124,58,237,0.9)]"
+              ? "bg-brand-600/20 text-brand-300 shadow-[0_0_20px_-6px_rgba(211,130,26,0.9)]"
               : "bg-ink-800 text-ink-300"
           }`}
         >

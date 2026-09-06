@@ -18,7 +18,7 @@ export default function Switch({ checked, onChange, label, description, disabled
         aria-hidden="true"
         className={`relative mt-0.5 h-7 w-12 shrink-0 rounded-full border transition-colors duration-300 ${
           checked
-            ? "border-brand-500 bg-brand-600 shadow-[0_0_20px_-4px_rgba(124,58,237,0.85)]"
+            ? "border-brand-500 bg-brand-600 shadow-[0_0_20px_-4px_rgba(211,130,26,0.85)]"
             : "border-ink-650 bg-ink-800"
         }`}
       >

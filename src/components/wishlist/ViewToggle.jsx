@@ -21,7 +21,7 @@ export default function ViewToggle({ view, onChange }) {
           aria-pressed={view === value}
           className={`flex h-9 w-10 items-center justify-center rounded-lg text-base transition-colors ${
             view === value
-              ? "bg-ink-750 text-brand-300 shadow-[inset_0_0_0_1px_rgba(124,58,237,0.35)]"
+              ? "bg-ink-750 text-brand-300 shadow-[inset_0_0_0_1px_rgba(211,130,26,0.35)]"
               : "text-ink-400 hover:text-ink-100"
           }`}
         >

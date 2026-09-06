@@ -8,8 +8,8 @@ import { useEffect, useRef } from "react";
 export default function DotGrid({
   gap = 26,
   dotSize = 1.6,
-  baseColor = "#26262f",
-  activeColor = "#8b5cf6",
+  baseColor = "#292621",
+  activeColor = "#e79c31",
   proximity = 130,
   shockRadius = 220,
   className = "",

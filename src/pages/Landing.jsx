@@ -70,6 +70,13 @@ const STEPS = [
   },
 ];
 
+// Read as a spec strip under the headline rather than another row of cards.
+const HERO_FACTS = [
+  { term: "Cost", value: "Free" },
+  { term: "Guests", value: "No account" },
+  { term: "Where", value: "Any browser" },
+];
+
 const PREVIEW = [
   {
     title: "Sennheiser Momentum 4",
@@ -213,7 +220,7 @@ export default function Landing() {
       <LandingNav />
 
       {/* Hero */}
-      <section className="relative overflow-hidden px-4 pb-20 pt-32 sm:px-6 sm:pb-28 sm:pt-40">
+      <section className="relative overflow-hidden px-4 pb-24 pt-28 sm:px-6 sm:pb-32 sm:pt-36">
         <Aurora />
         <div className="pointer-events-none absolute inset-0 opacity-70">
           <DotGrid className="h-full w-full" gap={30} proximity={140} />
@@ -221,47 +228,81 @@ export default function Landing() {
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-ink-950" />
 
         <div className="relative mx-auto max-w-6xl">
-          <div className="mx-auto max-w-3xl text-center mt-20">
-            <BlurText
-              as="h1"
-              text="Write down what you want. Send one link."
-              className="block text-[2.5rem] font-semibold leading-[1.08] tracking-tight text-ink-50 sm:text-6xl lg:text-[4.25rem]"
-              delay={0.045}
-            />
+          {/* Asymmetric: the copy holds the left seven columns, the shared list
+              runs off the right edge instead of sitting in a tidy centred box. */}
+          <div className="grid gap-16 lg:grid-cols-12 lg:items-center lg:gap-10">
+            <div className="lg:col-span-7">
+              <p className="flex items-center gap-4 text-[0.6875rem] font-medium uppercase tracking-[0.22em] text-brand-300">
+                <span className="h-px w-10 bg-brand-600" />
+                Wish lists
+              </p>
 
-            <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-ink-300 sm:text-lg">
-              Friends open the link, pick a gift and mark it as taken. Nobody
-              has to ask you twice, and nobody buys the same thing.
-            </p>
-
-            <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Link to={primaryHref} className="w-full sm:w-auto">
-                <Button size="lg" icon={PiGiftFill} className="w-full sm:w-auto">
-                  {user ? "Open my lists" : "Create a list"}
-                </Button>
-              </Link>
-              <a href="#how" className="w-full sm:w-auto">
-                <Button
-                  size="lg"
-                  variant="secondary"
-                  className="w-full sm:w-auto"
+              <h1 className="mt-8 text-[2.75rem] leading-[1.02] tracking-[-0.04em] sm:text-[3.5rem] lg:text-[4.5rem]">
+                <BlurText
+                  as="span"
+                  text="Write down what you want."
+                  className="block font-semibold text-ink-50"
+                  delay={0.045}
+                />
+                <span
+                  className="mt-2 block animate-fade-up font-light text-ink-300"
+                  style={{ animationDelay: "0.5s" }}
                 >
-                  How it works
-                </Button>
-              </a>
+                  Send{" "}
+                  <span className="relative whitespace-nowrap text-ink-50">
+                    one link
+                    <span
+                      aria-hidden="true"
+                      className="absolute -bottom-1 left-0 h-[3px] w-full bg-brand-500"
+                    />
+                  </span>
+                  .
+                </span>
+              </h1>
+
+              <p className="mt-8 max-w-md text-base leading-relaxed text-ink-300 sm:text-lg">
+                Friends open the link, pick a gift and mark it as taken. Nobody
+                has to ask you twice, and nobody buys the same thing.
+              </p>
+
+              <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
+                <Link to={primaryHref}>
+                  <Button size="lg" icon={PiGiftFill}>
+                    {user ? "Open my lists" : "Create a list"}
+                  </Button>
+                </Link>
+                <a
+                  href="#how"
+                  className="group inline-flex items-center gap-2 border-b border-ink-700 pb-1 text-[0.9375rem] text-ink-300 transition-colors hover:border-brand-500 hover:text-ink-50"
+                >
+                  See how it works
+                  <PiArrowRightBold className="text-[0.7em] transition-transform duration-200 group-hover:translate-x-1" />
+                </a>
+              </div>
+
+              <dl className="mt-14 flex max-w-lg border-t border-ink-800 pt-6 lg:max-w-none">
+                {HERO_FACTS.map((fact, index) => (
+                  <div
+                    key={fact.term}
+                    className={`flex-1 ${index > 0 ? "border-l border-ink-800 pl-5 sm:pl-8" : "pr-5"}`}
+                  >
+                    <dt className="text-[0.6875rem] uppercase tracking-[0.18em] text-ink-300">
+                      {fact.term}
+                    </dt>
+                    <dd className="mt-2 text-[0.9375rem] text-ink-50">{fact.value}</dd>
+                  </div>
+                ))}
+              </dl>
             </div>
 
-            <p className="mt-5 text-sm text-ink-500">
-              Free, and your guests never need an account.
-            </p>
+            <div className="lg:col-span-5">
+              <AnimatedContent delay={0.15} className="-mr-4 sm:mr-0 lg:-mr-20">
+                <div className="lg:translate-y-4 lg:-rotate-[1.5deg]">
+                  <PreviewPanel />
+                </div>
+              </AnimatedContent>
+            </div>
           </div>
-
-          <AnimatedContent
-            delay={0.15}
-            className="mx-auto mt-16 max-w-lg sm:mt-20"
-          >
-            <PreviewPanel />
-          </AnimatedContent>
         </div>
       </section>
 
@@ -311,7 +352,7 @@ export default function Landing() {
             {FEATURES.map((feature, index) => (
               <AnimatedContent key={feature.title} delay={(index % 3) * 0.08}>
                 <SpotlightCard className="h-full p-6">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-ink-700 bg-ink-800 text-xl text-brand-400 transition-shadow duration-300 group-hover:shadow-[0_0_26px_-8px_rgba(124,58,237,0.95)]">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-ink-700 bg-ink-800 text-xl text-brand-400 transition-shadow duration-300 group-hover:shadow-[0_0_26px_-8px_rgba(211,130,26,0.95)]">
                     <feature.icon />
                   </span>
                   <h3 className="mt-5 text-[1.0625rem] font-medium text-ink-50">
@@ -339,7 +380,7 @@ export default function Landing() {
           <div className="mt-12 grid gap-4 lg:grid-cols-2">
             <AnimatedContent>
               <div className="h-full rounded-card border border-brand-600/30 bg-brand-950/20 p-7">
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-600/20 text-xl text-brand-300 shadow-[0_0_28px_-8px_rgba(124,58,237,0.9)]">
+                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-600/20 text-xl text-brand-300 shadow-[0_0_28px_-8px_rgba(211,130,26,0.9)]">
                   <PiUsersThreeBold />
                 </span>
                 <h3 className="mt-5 text-xl font-medium text-ink-50">

@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
  * Fires a small burst of lines wherever the page is tapped.
  */
 export default function ClickSpark({
-  color = "#a78bfa",
+  color = "#f2b75c",
   count = 8,
   length = 14,
   duration = 420,
