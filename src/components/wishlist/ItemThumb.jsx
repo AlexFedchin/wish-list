@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { PiGiftFill } from "react-icons/pi";
 import useLinkImage from "../../lib/linkImage";
 
@@ -16,15 +16,15 @@ const SHAPES = {
 
 export default function ItemThumb({ item, view = "grid" }) {
   const { image } = useLinkImage(item.link || "");
-  const [loaded, setLoaded] = useState(false);
-  const [broken, setBroken] = useState(false);
 
-  useEffect(() => {
-    setLoaded(false);
-    setBroken(false);
-  }, [image]);
+  // Both states hold a URL rather than a flag. A picture already in the browser
+  // cache fires `load` before React can listen, so the ref below catches it;
+  // comparing URLs means a card that swaps pictures can never inherit the
+  // previous one's state.
+  const [shown, setShown] = useState(null);
+  const [failed, setFailed] = useState(null);
 
-  const src = broken ? null : image;
+  const src = image && image !== failed ? image : null;
 
   return (
     <div className={`relative shrink-0 overflow-hidden bg-ink-850 ${SHAPES[view]}`}>
@@ -38,14 +38,18 @@ export default function ItemThumb({ item, view = "grid" }) {
 
       {src && (
         <img
+          key={src}
           src={src}
           alt=""
           loading="lazy"
           decoding="async"
-          onLoad={() => setLoaded(true)}
-          onError={() => setBroken(true)}
+          ref={(node) => {
+            if (node?.complete && node.naturalWidth > 0) setShown(src);
+          }}
+          onLoad={() => setShown(src)}
+          onError={() => setFailed(src)}
           className={`relative h-full w-full object-cover transition-opacity duration-500 ${
-            loaded ? "opacity-100" : "opacity-0"
+            shown === src ? "opacity-100" : "opacity-0"
           }`}
         />
       )}

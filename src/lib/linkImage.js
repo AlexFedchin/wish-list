@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
  * not fire two hundred lookups at once.
  */
 
-const STORE_PREFIX = "wishstand.img:";
+const STORE_PREFIX = "wishstand.img.v2:";
 const MAX_PARALLEL = 4;
 
 const answers = new Map();
@@ -18,8 +18,11 @@ let running = 0;
 
 function remember(link, image) {
   answers.set(link, image);
+  // Only a hit is written down. A miss may just have been a slow shop, so it
+  // stays in memory for this page and gets another chance on the next load.
+  if (!image) return;
   try {
-    sessionStorage.setItem(STORE_PREFIX + link, image ?? "");
+    sessionStorage.setItem(STORE_PREFIX + link, image);
   } catch {
     /* storage blocked, the answer just lives in memory for this page */
   }
@@ -30,10 +33,9 @@ function peek(link) {
   if (answers.has(link)) return answers.get(link);
   try {
     const stored = sessionStorage.getItem(STORE_PREFIX + link);
-    if (stored === null) return undefined;
-    const image = stored || null;
-    answers.set(link, image);
-    return image;
+    if (!stored) return undefined;
+    answers.set(link, stored);
+    return stored;
   } catch {
     return undefined;
   }

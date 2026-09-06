@@ -20,7 +20,8 @@ export default handle(async (req) => {
   const target = publicUrl(new URL(req.url).searchParams.get("url") || "");
   if (!target) return json({ image: null });
 
-  const key = createHash("sha256").update(target.toString()).digest("hex").slice(0, 40);
+  // Bumping this prefix retires every cached answer from an older scraper.
+  const key = createHash("sha256").update(`v2|${target}`).digest("hex").slice(0, 40);
   const store = linkPreviewStore();
 
   const cached = await store.get(key, { type: "json" }).catch(() => null);

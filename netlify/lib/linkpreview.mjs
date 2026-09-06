@@ -1,11 +1,18 @@
 /**
- * Pulls the picture a page advertises to link unfurlers (Open Graph and
- * friends). Kept free of storage and HTTP plumbing so it can be exercised on
- * its own.
+ * Pulls the picture a page advertises to link unfurlers (Open Graph, Twitter
+ * cards, schema.org). Kept free of storage and HTTP plumbing so it can be
+ * exercised on its own.
+ *
+ * Shop pages are hostile in specific ways, and each rule here answers one:
+ * they block unknown user agents, they answer product URLs with a 404 status
+ * while still serving a complete page, they leave `og:image` present but empty
+ * and put the real picture in JSON-LD, and they are slow.
  */
 
-const HTML_BUDGET_BYTES = 256 * 1024;
-const FETCH_TIMEOUT_MS = 6000;
+const HTML_BUDGET_BYTES = 384 * 1024;
+// Netlify gives a synchronous function 10s in total, so the fetch has to leave
+// room for parsing and the cache write behind it.
+const FETCH_TIMEOUT_MS = 7000;
 
 const LOOKS_LIKE_IMAGE = /\.(avif|gif|jpe?g|png|webp)(?:[?#]|$)/i;
 
@@ -43,8 +50,8 @@ function attribute(tag, name) {
   return decode(match[1] ?? match[2] ?? match[3] ?? "").trim();
 }
 
-// Ordered best-first. Open Graph is what shops actually publish; the rest are
-// fallbacks for older or hand-rolled pages.
+// Ordered best-first. Open Graph is what most shops publish; the rest are
+// fallbacks for older, hand-rolled or client-rendered pages.
 const META_KEYS = [
   "og:image:secure_url",
   "og:image:url",
@@ -52,7 +59,55 @@ const META_KEYS = [
   "twitter:image",
   "twitter:image:src",
   "image",
+  "thumbnail",
 ];
+
+/** Pulls the first usable `image` out of a parsed JSON-LD blob. */
+function imageFromLd(node, depth = 0) {
+  if (!node || depth > 6) return "";
+  if (Array.isArray(node)) {
+    for (const entry of node) {
+      const found = imageFromLd(entry, depth + 1);
+      if (found) return found;
+    }
+    return "";
+  }
+  if (typeof node !== "object") return "";
+
+  const image = node.image ?? node.thumbnailUrl ?? node.logo;
+  if (typeof image === "string" && image.trim()) return image.trim();
+  if (Array.isArray(image)) {
+    const first = imageFromLd(image, depth + 1);
+    if (first) return first;
+  }
+  if (image && typeof image === "object") {
+    const url = image.url ?? image.contentUrl;
+    if (typeof url === "string" && url.trim()) return url.trim();
+  }
+
+  // Products are often nested under @graph or mainEntity.
+  for (const key of ["@graph", "mainEntity", "itemListElement", "hasVariant"]) {
+    const found = imageFromLd(node[key], depth + 1);
+    if (found) return found;
+  }
+  return "";
+}
+
+function imageFromJsonLd(html) {
+  const blocks = html.match(
+    /<script[^>]+type\s*=\s*["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi,
+  );
+  for (const block of blocks ?? []) {
+    const body = block.replace(/^<script[^>]*>/i, "").replace(/<\/script>$/i, "");
+    try {
+      const found = imageFromLd(JSON.parse(body));
+      if (found) return found;
+    } catch {
+      /* one malformed block should not stop us looking at the next */
+    }
+  }
+  return "";
+}
 
 export function findImage(html) {
   const found = new Map();
@@ -64,6 +119,8 @@ export function findImage(html) {
       attribute(tag, "itemprop")
     ).toLowerCase();
     const content = attribute(tag, "content");
+    // Plenty of shops emit `<meta property="og:image" content="">` and put the
+    // real picture elsewhere, so an empty value counts as absent.
     if (key && content && !found.has(key)) found.set(key, content);
   }
 
@@ -71,9 +128,12 @@ export function findImage(html) {
     if (found.has(key)) return found.get(key);
   }
 
-  for (const tag of html.match(/<link\b[^>]*>/gi) ?? []) {
-    const rel = attribute(tag, "rel").toLowerCase();
-    if (rel === "image_src" || rel === "apple-touch-icon") {
+  const structured = imageFromJsonLd(html);
+  if (structured) return structured;
+
+  for (const rel of ["image_src", "apple-touch-icon", "apple-touch-icon-precomposed"]) {
+    for (const tag of html.match(/<link\b[^>]*>/gi) ?? []) {
+      if (attribute(tag, "rel").toLowerCase() !== rel) continue;
       const href = attribute(tag, "href");
       if (href) return href;
     }
@@ -82,8 +142,8 @@ export function findImage(html) {
   return "";
 }
 
-/** Reads just enough of the response to cover <head>, then drops the rest. */
-async function readHead(response) {
+/** Reads the response up to a byte budget, stopping early once it is enough. */
+async function readCapped(response) {
   const reader = response.body?.getReader?.();
   if (!reader) return (await response.text()).slice(0, HTML_BUDGET_BYTES);
 
@@ -97,7 +157,9 @@ async function readHead(response) {
       if (done) break;
       bytes += value.byteLength;
       html += decoder.decode(value, { stream: true });
-      if (/<\/head>/i.test(html)) break;
+      // Only stop at the end of the head if it actually carried a picture;
+      // otherwise keep going, because JSON-LD usually sits in the body.
+      if (/<\/head>/i.test(html) && findImage(html)) break;
     }
   } finally {
     reader.cancel().catch(() => {});
@@ -106,30 +168,35 @@ async function readHead(response) {
   return html;
 }
 
+export async function fetchPage(url) {
+  return fetch(url, {
+    redirect: "follow",
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    headers: {
+      // Retailers serve their unfurl markup to link previewers and something
+      // else (a 403, or a script-only shell) to everyone else, so the agent
+      // says who we are and carries the token they actually match on.
+      "user-agent":
+        "Mozilla/5.0 (compatible; WishstandBot/1.0; +https://wishstand.app) facebookexternalhit/1.1",
+      accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "accept-language": "en-US,en;q=0.9",
+    },
+  });
+}
+
 /** Resolves the image behind a page URL, or "" when there is nothing to show. */
 export async function scrapeImage(url) {
   if (LOOKS_LIKE_IMAGE.test(url.pathname)) return url.toString();
 
-  const response = await fetch(url, {
-    redirect: "follow",
-    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
-    headers: {
-      // Some shops serve a stripped page to unknown agents and a full one with
-      // Open Graph tags to anything that looks like a link unfurler.
-      "user-agent":
-        "Mozilla/5.0 (compatible; WishstandBot/1.0; +https://wishstand.app)",
-      accept: "text/html,application/xhtml+xml",
-      "accept-language": "en",
-    },
-  });
-
-  if (!response.ok) return "";
+  const response = await fetchPage(url);
 
   const type = response.headers.get("content-type") || "";
   if (type.startsWith("image/")) return response.url || url.toString();
-  if (!type.includes("html")) return "";
+  if (type && !type.includes("html") && !type.includes("xml")) return "";
 
-  const candidate = findImage(await readHead(response));
+  // Deliberately not gated on response.ok: several retailers answer a perfectly
+  // good product page with a 404 or 410 status, tags and all.
+  const candidate = findImage(await readCapped(response));
   if (!candidate) return "";
 
   // Relative paths resolve against the page we actually landed on, which may
