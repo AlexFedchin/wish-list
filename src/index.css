@@ -1,0 +1,190 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  /* Neutrals: cool grey with a trace of violet so they sit next to the brand. */
+  --color-ink-50: #f5f5f8;
+  --color-ink-100: #dedee6;
+  --color-ink-200: #b4b4c2;
+  --color-ink-300: #8e8e9e;
+  --color-ink-400: #6b6b7b;
+  --color-ink-500: #4a4a57;
+  --color-ink-600: #33333e;
+  --color-ink-650: #26262f;
+  --color-ink-700: #1f1f27;
+  --color-ink-750: #191920;
+  --color-ink-800: #14141a;
+  --color-ink-850: #101015;
+  --color-ink-900: #0c0c10;
+  --color-ink-950: #08080a;
+
+  /* The single accent. Nothing else in the UI is coloured. */
+  --color-brand-300: #c4b5fd;
+  --color-brand-400: #a78bfa;
+  --color-brand-500: #8b5cf6;
+  --color-brand-600: #7c3aed;
+  --color-brand-700: #6d28d9;
+  --color-brand-800: #5b21b6;
+  --color-brand-900: #4c1d95;
+  --color-brand-950: #2b1065;
+
+  --radius-card: 1.125rem;
+
+  --animate-fade-up: fade-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-sheet-up: sheet-up 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-pop: pop 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-drift: drift 22s ease-in-out infinite;
+  --animate-spin-slow: spin 8s linear infinite;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes sheet-up {
+    from {
+      opacity: 0;
+      transform: translateY(24px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: scale(0.94);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes drift {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    33% {
+      transform: translate3d(4%, -6%, 0) scale(1.08);
+    }
+    66% {
+      transform: translate3d(-5%, 4%, 0) scale(0.96);
+    }
+  }
+}
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    color-scheme: dark;
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-ink-950);
+    color: var(--color-ink-100);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+    min-height: 100dvh;
+  }
+
+  ::selection {
+    background-color: color-mix(in oklab, var(--color-brand-600) 45%, transparent);
+    color: var(--color-ink-50);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand-500);
+    outline-offset: 2px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Keeps iOS from zooming when a field is focused. */
+  input,
+  textarea,
+  select,
+  button {
+    font: inherit;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-ink-700);
+    border-radius: 999px;
+    border: 3px solid var(--color-ink-950);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-ink-600);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@utility surface {
+  background-color: color-mix(in oklab, var(--color-ink-850) 85%, transparent);
+  border: 1px solid var(--color-ink-700);
+  backdrop-filter: blur(12px);
+}
+
+@utility glow-brand {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--color-brand-500) 30%, transparent),
+    0 12px 40px -12px color-mix(in oklab, var(--color-brand-600) 65%, transparent);
+}
+
+@utility pb-safe {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

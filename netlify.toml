@@ -1,0 +1,39 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[functions]
+  node_bundler = "esbuild"
+  directory = "netlify/functions"
+
+# `netlify dev` runs Vite behind the same origin as the functions, so the app
+# talks to /api/* in development exactly like it does in production.
+[dev]
+  command = "npm run dev:vite"
+  targetPort = 5173
+  port = 8888
+  framework = "#custom"
+  autoLaunch = true
+
+# Functions with a custom `path` are matched before redirects, so this SPA
+# fallback never swallows /api/* requests.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Share links must never be indexed or cached by intermediaries.
+[[headers]]
+  for = "/s/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
