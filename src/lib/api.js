@@ -1,5 +1,5 @@
-const TOKEN_KEY = "wishly.token";
-const CLAIMER_KEY = "wishly.claimer";
+const TOKEN_KEY = "wishstand.token";
+const CLAIMER_KEY = "wishstand.claimer";
 
 export const getToken = () => {
   try {
@@ -14,7 +14,7 @@ export const setToken = (token) => {
     if (token) localStorage.setItem(TOKEN_KEY, token);
     else localStorage.removeItem(TOKEN_KEY);
   } catch {
-    /* private mode — the session just won't persist */
+    /* private mode, the session just won't persist */
   }
 };
 
@@ -60,7 +60,7 @@ async function request(path, { method = "GET", body, auth = true } = {}) {
     throw new ApiError("Can't reach the server. Check your connection.", 0);
   }
 
-  // A non-JSON body here means the request never reached the API — a proxy or
+  // A non-JSON body here means the request never reached the API. A proxy or
   // the SPA fallback answered instead. Treat it as an error rather than letting
   // an empty payload look like a successful, empty result.
   if (!response.headers.get("content-type")?.includes("application/json")) {

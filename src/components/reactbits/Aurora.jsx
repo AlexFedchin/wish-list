@@ -1,5 +1,5 @@
 /**
- * React Bits — Aurora, as slow-drifting light instead of a WebGL shader so it
+ * React Bits Aurora, as slow-drifting light instead of a WebGL shader so it
  * costs nothing on a phone. Purely decorative.
  */
 export default function Aurora({ className = "", intensity = 1 }) {

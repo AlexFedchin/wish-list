@@ -14,7 +14,7 @@ export default function useStickyState(key, initial) {
     try {
       localStorage.setItem(key, value);
     } catch {
-      /* storage blocked — the choice just won't persist */
+      /* storage blocked, the choice just won't persist */
     }
   }, [key, value]);
 

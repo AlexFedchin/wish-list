@@ -3,7 +3,7 @@ import Modal from "../ui/Modal";
 import Button from "../ui/Button";
 import { Input } from "../ui/Field";
 
-const NAME_KEY = "wishly.guestName";
+const NAME_KEY = "wishstand.guestName";
 
 export default function ClaimDialog({ open, onClose, item, onConfirm }) {
   const [name, setName] = useState("");

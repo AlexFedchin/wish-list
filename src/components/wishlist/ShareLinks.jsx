@@ -27,7 +27,7 @@ function LinkPanel({ variant, token, listTitle, onRegenerate }) {
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
     } catch {
-      toast.error("Couldn't copy — long-press the link to copy it manually");
+      toast.error("Couldn't copy. Long-press the link to copy it manually");
     }
   };
 
@@ -39,7 +39,7 @@ function LinkPanel({ variant, token, listTitle, onRegenerate }) {
         url,
       });
     } catch {
-      /* the sheet was dismissed — nothing to report */
+      /* the sheet was dismissed, nothing to report */
     }
   };
 

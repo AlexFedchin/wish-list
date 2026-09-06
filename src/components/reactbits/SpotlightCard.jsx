@@ -1,12 +1,16 @@
 import { useRef } from "react";
 
 /**
- * React Bits — SpotlightCard.
+ * React Bits SpotlightCard.
  * A soft highlight follows the cursor across the card surface.
+ *
+ * `innerClassName` reaches the wrapper that sits above the highlight, so a card
+ * can lay its own children out (a flex column, say) without losing the effect.
  */
 export default function SpotlightCard({
   children,
   className = "",
+  innerClassName = "",
   spotlightColor = "rgba(139, 92, 246, 0.18)",
   as: Tag = "div",
   ...rest
@@ -41,7 +45,7 @@ export default function SpotlightCard({
           background: `radial-gradient(340px circle at var(--spot-x, 50%) var(--spot-y, 50%), ${spotlightColor}, transparent 70%)`,
         }}
       />
-      <div className="relative">{children}</div>
+      <div className={`relative ${innerClassName}`}>{children}</div>
     </Tag>
   );
 }

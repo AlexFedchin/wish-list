@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 
 /**
- * React Bits — AnimatedContent.
+ * React Bits AnimatedContent.
  * Reveals its children the first time they scroll into view.
  */
 export default function AnimatedContent({

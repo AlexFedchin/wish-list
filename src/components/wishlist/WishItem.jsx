@@ -9,6 +9,7 @@ import {
 } from "react-icons/pi";
 import { useState } from "react";
 import SpotlightCard from "../reactbits/SpotlightCard";
+import ItemThumb from "./ItemThumb";
 
 const domainOf = (link) => {
   try {
@@ -151,29 +152,33 @@ export default function WishItem({
     return (
       <motion.li {...shared} className="group">
         <div
-          className={`flex flex-col gap-3 rounded-card border border-ink-700 bg-ink-850/60 p-4 transition-colors hover:border-ink-650 sm:flex-row sm:items-center sm:gap-4 sm:px-5 ${
+          className={`flex gap-4 rounded-card border border-ink-700 bg-ink-850/60 p-4 transition-colors hover:border-ink-650 sm:items-center sm:px-5 ${
             dimmed ? "opacity-60" : ""
           }`}
         >
-          <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap items-center gap-2">
-              <h3 className="text-[0.9375rem] font-medium text-ink-50">{item.title}</h3>
-              <PriorityMark priority={item.priority} />
-              <TakenBadge taken={item.taken} />
-            </div>
-            {item.description && (
-              <p className="mt-1.5 text-sm leading-relaxed text-ink-400 line-clamp-2">
-                {item.description}
-              </p>
-            )}
-          </div>
+          <ItemThumb item={item} view="list" />
 
-          <div className="flex items-center justify-between gap-2 sm:justify-end">
-            {item.link && <LinkChip link={item.link} />}
-            {canClaim && (
-              <ClaimButton item={item} busy={busy} onClaim={onClaim} onUnclaim={onUnclaim} />
-            )}
-            <Actions canEdit={canEdit} onEdit={onEdit} onDelete={onDelete} />
+          <div className="flex min-w-0 flex-1 flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <h3 className="text-[0.9375rem] font-medium text-ink-50">{item.title}</h3>
+                <PriorityMark priority={item.priority} />
+                <TakenBadge taken={item.taken} />
+              </div>
+              {item.description && (
+                <p className="mt-1.5 text-sm leading-relaxed text-ink-400 line-clamp-2">
+                  {item.description}
+                </p>
+              )}
+            </div>
+
+            <div className="flex items-center justify-between gap-2 sm:justify-end">
+              {item.link && <LinkChip link={item.link} />}
+              {canClaim && (
+                <ClaimButton item={item} busy={busy} onClaim={onClaim} onUnclaim={onUnclaim} />
+              )}
+              <Actions canEdit={canEdit} onEdit={onEdit} onDelete={onDelete} />
+            </div>
           </div>
         </div>
       </motion.li>
@@ -183,50 +188,55 @@ export default function WishItem({
   return (
     <motion.li {...shared} className="group h-full">
       <SpotlightCard
-        className={`flex h-full flex-col p-5 ${dimmed ? "opacity-65" : ""}`}
+        className={`h-full ${dimmed ? "opacity-65" : ""}`}
+        innerClassName="flex h-full flex-col"
         spotlightColor="rgba(139, 92, 246, 0.16)"
       >
-        <div className="flex items-start justify-between gap-3">
-          <h3 className="text-base font-medium leading-snug text-ink-50">{item.title}</h3>
-          <Actions canEdit={canEdit} onEdit={onEdit} onDelete={onDelete} />
-        </div>
+        <ItemThumb item={item} view="grid" />
 
-        {(item.priority === "high" || item.taken) && (
-          <div className="mt-3 flex flex-wrap gap-2">
-            <PriorityMark priority={item.priority} />
-            <TakenBadge taken={item.taken} />
+        <div className="flex flex-1 flex-col p-5">
+          <div className="flex items-start justify-between gap-3">
+            <h3 className="text-base font-medium leading-snug text-ink-50">{item.title}</h3>
+            <Actions canEdit={canEdit} onEdit={onEdit} onDelete={onDelete} />
           </div>
-        )}
 
-        {item.description && (
-          <div className="mt-3">
-            <p
-              className={`text-sm leading-relaxed text-ink-400 ${expanded ? "" : "line-clamp-3"}`}
-            >
-              {item.description}
-            </p>
-            {item.description.length > 140 && (
-              <button
-                type="button"
-                onClick={() => setExpanded((value) => !value)}
-                className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-brand-400 hover:text-brand-300"
-              >
-                <PiDotsThreeOutlineFill className="text-[0.9em]" />
-                {expanded ? "Show less" : "Show more"}
-              </button>
-            )}
-          </div>
-        )}
-
-        <div className="mt-auto space-y-3 pt-4">
-          {item.link && (
-            <div className="flex">
-              <LinkChip link={item.link} />
+          {(item.priority === "high" || item.taken) && (
+            <div className="mt-3 flex flex-wrap gap-2">
+              <PriorityMark priority={item.priority} />
+              <TakenBadge taken={item.taken} />
             </div>
           )}
-          {canClaim && (
-            <ClaimButton item={item} busy={busy} onClaim={onClaim} onUnclaim={onUnclaim} full />
+
+          {item.description && (
+            <div className="mt-3">
+              <p
+                className={`text-sm leading-relaxed text-ink-400 ${expanded ? "" : "line-clamp-3"}`}
+              >
+                {item.description}
+              </p>
+              {item.description.length > 140 && (
+                <button
+                  type="button"
+                  onClick={() => setExpanded((value) => !value)}
+                  className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-brand-400 hover:text-brand-300"
+                >
+                  <PiDotsThreeOutlineFill className="text-[0.9em]" />
+                  {expanded ? "Show less" : "Show more"}
+                </button>
+              )}
+            </div>
           )}
+
+          <div className="mt-auto space-y-3 pt-4">
+            {item.link && (
+              <div className="flex">
+                <LinkChip link={item.link} />
+              </div>
+            )}
+            {canClaim && (
+              <ClaimButton item={item} busy={busy} onClaim={onClaim} onUnclaim={onUnclaim} full />
+            )}
+          </div>
         </div>
       </SpotlightCard>
     </motion.li>

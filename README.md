@@ -1,9 +1,9 @@
-# Wishly
+# Wishstand
 
 A wish list you can actually send to people. Add what you'd love to get, share one
 link, and let your friends quietly claim gifts so nobody buys the same thing twice.
 
-Deploys to Netlify's free tier end to end — no database to provision, no third-party
+Deploys to Netlify's free tier end to end, with no database to provision and no third-party
 services to sign up for.
 
 ## Stack
@@ -12,9 +12,9 @@ services to sign up for.
 | ---------- | ---------------------------------------------------------------------------- |
 | Frontend   | React 19 + Vite + Tailwind CSS v4                                            |
 | Animation  | Framer Motion, plus [React Bits](https://reactbits.dev/) components in `src/components/reactbits/` |
-| Icons      | `react-icons` — Phosphor set (`react-icons/pi`)                              |
+| Icons      | `react-icons`, Phosphor set (`react-icons/pi`)                                |
 | Backend    | Netlify Functions (v2 syntax, `netlify/functions/*.mjs`)                     |
-| Storage    | Netlify Blobs — built into Netlify, nothing to configure                     |
+| Storage    | Netlify Blobs, built into Netlify, nothing to configure                      |
 | Auth       | Email + password, scrypt hashing, HMAC-SHA256 session tokens (no dependency) |
 
 ## Deploying
@@ -36,14 +36,14 @@ services to sign up for.
    ```
 
    Without it the app still runs, but every session token is signed with a known
-   fallback secret — set it before you share anything.
+   fallback secret, so set it before you share anything.
 4. Deploy. Netlify Blobs is enabled automatically; there is no database step.
 
 ## Running locally
 
 ```bash
 npm install
-npm run dev        # netlify dev — serves Vite and the functions on http://localhost:8888
+npm run dev        # netlify dev serves Vite and the functions on http://localhost:8888
 ```
 
 Use `npm run dev`, not `npm run dev:vite`. Vite alone serves the UI but not `/api/*`,
@@ -53,7 +53,7 @@ so nothing will load.
 > `<path>/index.html` whenever a handler answers `403` or `404`, and returns the last
 > attempt's response. So permission errors can surface locally with the wrong status
 > ("this link is view-only" showing up as "link no longer works"). The functions
-> themselves return the correct codes — this is netlify-cli's dev proxy, not the API.
+> themselves return the correct codes. This is netlify-cli's dev proxy, not the API.
 
 ## API
 
@@ -96,7 +96,7 @@ seeing claims, so coordination still works. The author literally cannot see them
 
 **Claiming without accounts.** Guests never sign in. Each browser generates a random
 `claimerId` kept in `localStorage`; it is what proves "this claim is mine" so a guest
-can release a gift they claimed. That id is never returned to other visitors — the
+can release a gift they claimed. That id is never returned to other visitors, only the
 API only tells you whether a claim is yours (`taken.mine`).
 
 **Concurrent claims.** Two guests claiming different gifts at the same moment would
@@ -108,10 +108,10 @@ neither write is lost. A second guest claiming the *same* gift gets a `409`.
 
 Four Netlify Blobs stores, all read with strong consistency:
 
-- `wl_users` — key: email → `{ id, email, passwordHash, createdAt }`
-- `wl_lists` — key: list id → the list, items included
-- `wl_user_lists` — key: user id → `{ listIds }`
-- `wl_share_tokens` — key: share token → `{ listId, role }`
+- `wl_users`, key: email → `{ id, email, passwordHash, createdAt }`
+- `wl_lists`, key: list id → the list, items included
+- `wl_user_lists`, key: user id → `{ listIds }`
+- `wl_share_tokens`, key: share token → `{ listId, role }`
 
 Token lookups double-check that the list still names that token, so a rotated link
 can't be resurrected by a stale record.

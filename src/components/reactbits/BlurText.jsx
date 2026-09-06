@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 
 /**
- * React Bits — BlurText.
+ * React Bits BlurText.
  * Words resolve out of a blur, one after another.
  */
 export default function BlurText({

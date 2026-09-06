@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 /**
- * React Bits — ClickSpark.
+ * React Bits ClickSpark.
  * Fires a small burst of lines wherever the page is tapped.
  */
 export default function ClickSpark({

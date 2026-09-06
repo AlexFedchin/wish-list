@@ -1,16 +1,27 @@
 import { Link } from "react-router-dom";
-import { PiGiftFill } from "react-icons/pi";
 
+/**
+ * The wordmark carries the whole identity, so it is set rather than boxed: a
+ * light "wish" leaning on a heavier "stand", with the accent rule as the base
+ * the name is named after.
+ */
 export default function Logo({ to = "/", className = "" }) {
   return (
     <Link
       to={to}
-      className={`group inline-flex items-center gap-2.5 text-ink-50 transition-opacity hover:opacity-90 ${className}`}
+      aria-label="Wishstand home"
+      className={`group inline-flex items-baseline text-[1.125rem] leading-none tracking-[-0.035em] ${className}`}
     >
-      <span className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-brand-600/40 bg-brand-600/15 text-brand-300 shadow-[0_0_22px_-6px_rgba(124,58,237,0.9)]">
-        <PiGiftFill className="text-lg" />
+      <span className="font-light text-ink-300 transition-colors duration-300 group-hover:text-ink-100">
+        wish
       </span>
-      <span className="text-[1.0625rem] font-semibold tracking-tight">Wishly</span>
+      <span className="relative font-semibold text-ink-50">
+        stand
+        <span
+          aria-hidden="true"
+          className="absolute -bottom-1.5 left-0 h-[2px] w-full bg-brand-500 transition-colors duration-300 group-hover:bg-brand-300"
+        />
+      </span>
     </Link>
   );
 }

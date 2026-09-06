@@ -4,7 +4,7 @@ import { AnimatePresence, motion, useDragControls } from "framer-motion";
 import { PiXBold } from "react-icons/pi";
 
 /**
- * A bottom sheet on phones and a centred dialog from `sm` up — the sheet keeps
+ * A bottom sheet on phones and a centred dialog from `sm` up. The sheet keeps
  * actions inside thumb reach, which is where most of this app gets used.
  */
 export default function Modal({ open, onClose, title, description, children, footer }) {

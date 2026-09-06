@@ -10,6 +10,9 @@ export const listsStore = () => store("wl_lists");
 export const userListsStore = () => store("wl_user_lists");
 export const shareTokensStore = () => store("wl_share_tokens");
 
+// Scraped link previews. Purely a cache, so it does not need strong reads.
+export const linkPreviewStore = () => getStore({ name: "wl_link_previews" });
+
 export const emailKey = (email) => String(email).trim().toLowerCase();
 
 export async function getJSON(s, key) {

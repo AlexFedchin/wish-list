@@ -74,7 +74,7 @@ function NewListModal({ open, onClose, onCreated }) {
           hint="Optional"
           value={note}
           onChange={(event) => setNote(event.target.value)}
-          placeholder="Party's on the 14th — anything here would make me happy."
+          placeholder="Party's on the 14th. Anything here would make me happy."
           maxLength={300}
         />
         {error && <p className="text-sm text-red-400">{error}</p>}

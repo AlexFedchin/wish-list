@@ -43,8 +43,8 @@ function RoleBanner({ role }) {
         {editor ? (
           <>
             You have an{" "}
-            <span className="font-medium text-ink-100">editor link</span> — add,
-            change or remove gifts on the owner's behalf.
+            <span className="font-medium text-ink-100">editor link</span>, so you
+            can add, change or remove gifts on the owner's behalf.
           </>
         ) : (
           <>
@@ -63,7 +63,7 @@ export default function SharePage() {
 
   const [list, setList] = useState(null);
   const [broken, setBroken] = useState(false);
-  const [view, setView] = useStickyState("wishly.view", "grid");
+  const [view, setView] = useStickyState("wishstand.view", "grid");
   const [hideTaken, setHideTaken] = useState(false);
   const [claiming, setClaiming] = useState(null);
   const [busyId, setBusyId] = useState(null);
@@ -100,7 +100,7 @@ export default function SharePage() {
   const claim = async (name) => {
     const { list } = await api.claim(token, claiming.id, name);
     setList(list);
-    toast.success("Claimed — thank you!");
+    toast.success("Claimed. Thank you!");
   };
 
   const unclaim = async (item) => {
@@ -108,7 +108,7 @@ export default function SharePage() {
     try {
       const { list } = await api.unclaim(token, item.id);
       setList(list);
-      toast.toast("Released — it's up for grabs again");
+      toast.toast("Released. It's up for grabs again");
     } catch (err) {
       toast.error(err.message);
     } finally {
@@ -151,7 +151,7 @@ export default function SharePage() {
             fresh link.
           </p>
           <Link to="/" className="mt-8 inline-block">
-            <Button variant="secondary">Learn about Wishly</Button>
+            <Button variant="secondary">About Wishstand</Button>
           </Link>
         </div>
       </div>
@@ -252,7 +252,7 @@ export default function SharePage() {
               description={
                 isEditor
                   ? "Add the first gift so guests have something to pick from."
-                  : "Check back soon — the owner hasn't added anything."
+                  : "Check back soon. The owner hasn't added anything."
               }
               action={
                 isEditor ? (

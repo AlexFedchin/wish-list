@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 /**
- * React Bits — DotGrid.
+ * React Bits DotGrid.
  * An interactive dot field that reacts to the pointer and ripples on click.
  * Rewritten on requestAnimationFrame so it ships without an animation library.
  */

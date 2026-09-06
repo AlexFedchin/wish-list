@@ -78,7 +78,7 @@ export default function ItemForm({ open, onClose, onSubmit, item }) {
           hint="Optional"
           value={values.description}
           onChange={set("description")}
-          placeholder="Colour, size, which model — anything that helps."
+          placeholder="Colour, size, which model, anything that helps."
           maxLength={600}
           rows={3}
         />

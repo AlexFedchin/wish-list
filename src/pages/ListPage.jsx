@@ -184,7 +184,7 @@ export default function ListPage() {
   const [list, setList] = useState(null);
   const [missing, setMissing] = useState(false);
   const [tab, setTab] = useState("gifts");
-  const [view, setView] = useStickyState("wishly.view", "grid");
+  const [view, setView] = useStickyState("wishstand.view", "grid");
   const [editing, setEditing] = useState(null);
   const [formOpen, setFormOpen] = useState(false);
   const [deletingItem, setDeletingItem] = useState(null);
@@ -384,7 +384,7 @@ export default function ListPage() {
           <div className="mt-6 space-y-4">
             <ShareLinks list={list} onRegenerate={regenerate} />
             <p className="rounded-card border border-ink-800 bg-ink-900/40 px-5 py-4 text-sm leading-relaxed text-ink-400">
-              Anyone with a link can open it — treat them like passwords. If a
+              Anyone with a link can open it, so treat them like passwords. If a
               link ends up somewhere it shouldn't, regenerate it and the old one
               stops working.
             </p>

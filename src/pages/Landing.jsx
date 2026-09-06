@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import {
   PiArrowRightBold,
   PiCheckBold,
-  PiConfettiBold,
   PiDevicesBold,
   PiEyeClosedBold,
   PiGiftFill,
@@ -19,8 +18,6 @@ import DotGrid from "../components/reactbits/DotGrid";
 import BlurText from "../components/reactbits/BlurText";
 import AnimatedContent from "../components/reactbits/AnimatedContent";
 import SpotlightCard from "../components/reactbits/SpotlightCard";
-import StarBorder from "../components/reactbits/StarBorder";
-import Magnet from "../components/reactbits/Magnet";
 import Button from "../components/ui/Button";
 import Logo from "../components/ui/Logo";
 import { useAuth } from "../lib/auth";
@@ -28,48 +25,48 @@ import { useAuth } from "../lib/auth";
 const FEATURES = [
   {
     icon: PiListChecksBold,
-    title: "Everything in one place",
-    body: "Title, a few details, a link to the exact model. Nothing more to fill in.",
+    title: "One short form",
+    body: "A name, a couple of details, and a link if you have one. That is all of it.",
   },
   {
     icon: PiHandbagFill,
     title: "No duplicate gifts",
-    body: "A guest claims an item and it shows as taken for everyone else, instantly.",
+    body: "When someone claims a gift, everyone else sees straight away that it is taken.",
   },
   {
     icon: PiEyeClosedBold,
-    title: "Surprise stays intact",
-    body: "Decide whether you get to see what's been claimed. Off by one switch.",
+    title: "You can stay surprised",
+    body: "Turn the claim badges off and you will not see what anyone picked.",
   },
   {
     icon: PiUsersThreeBold,
-    title: "Two kinds of links",
-    body: "One for people buying gifts, one for whoever helps you keep the list current.",
+    title: "Two kinds of link",
+    body: "One for the people buying gifts, one for whoever helps you keep the list current.",
   },
   {
     icon: PiSlidersBold,
     title: "Cards or a plain list",
-    body: "Switch layouts depending on whether you're browsing or scanning quickly.",
+    body: "Switch between big cards with pictures and a compact list.",
   },
   {
     icon: PiDevicesBold,
-    title: "Made for phones first",
-    body: "Your friends will open the link on a phone. That's the screen it was designed on.",
+    title: "Works on a phone",
+    body: "Most people will open your link on a phone, so that is the screen it was built on.",
   },
 ];
 
 const STEPS = [
   {
-    title: "Add what you'd love",
-    body: "Drop in gifts as they come to mind. A link makes it unmistakable.",
+    title: "Add what you want",
+    body: "Write things down as you think of them. A link helps people find the right one.",
   },
   {
-    title: "Send one link",
-    body: "Friends open it in a browser. No account, no app, no sign-up wall.",
+    title: "Send the link",
+    body: "Friends open it in a browser. No account and no app to install.",
   },
   {
-    title: "Let them sort it out",
-    body: "Whoever claims a gift first gets it. Everyone else sees it's handled.",
+    title: "They pick one",
+    body: "Whoever claims a gift first gets it. Everyone else sees it is taken.",
   },
 ];
 
@@ -161,7 +158,7 @@ function PreviewPanel() {
           <span className="h-2.5 w-2.5 rounded-full bg-ink-700" />
         </div>
         <span className="truncate rounded-md bg-ink-850 px-3 py-1 font-mono text-[0.6875rem] text-ink-400">
-          wishly.app/s/•••••
+          wishstand.app/s/•••••
         </span>
         <span className="w-12" />
       </div>
@@ -227,29 +224,22 @@ export default function Landing() {
           <div className="mx-auto max-w-3xl text-center mt-20">
             <BlurText
               as="h1"
-              text="A wish list your friends will actually enjoy using"
+              text="Write down what you want. Send one link."
               className="block text-[2.5rem] font-semibold leading-[1.08] tracking-tight text-ink-50 sm:text-6xl lg:text-[4.25rem]"
               delay={0.045}
             />
 
             <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-ink-300 sm:text-lg">
-              Put down what you'd love to get, share one link, and let everyone
-              quietly sort out who's buying what. No spreadsheet, no group chat
-              archaeology.
+              Friends open the link, pick a gift and mark it as taken. Nobody
+              has to ask you twice, and nobody buys the same thing.
             </p>
 
             <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Magnet strength={0.25}>
-                <Link to={primaryHref} className="block">
-                  <Button
-                    size="lg"
-                    icon={PiGiftFill}
-                    className="w-full sm:w-auto"
-                  >
-                    {user ? "Open my lists" : "Create your wish list"}
-                  </Button>
-                </Link>
-              </Magnet>
+              <Link to={primaryHref} className="w-full sm:w-auto">
+                <Button size="lg" icon={PiGiftFill} className="w-full sm:w-auto">
+                  {user ? "Open my lists" : "Create a list"}
+                </Button>
+              </Link>
               <a href="#how" className="w-full sm:w-auto">
                 <Button
                   size="lg"
@@ -283,7 +273,7 @@ export default function Landing() {
         <div className="mx-auto max-w-6xl">
           <AnimatedContent>
             <h2 className="max-w-xl text-3xl font-semibold text-ink-50 sm:text-4xl">
-              Three steps, then you're done
+              How it works
             </h2>
           </AnimatedContent>
 
@@ -342,7 +332,7 @@ export default function Landing() {
         <div className="mx-auto max-w-6xl">
           <AnimatedContent>
             <h2 className="max-w-2xl text-3xl font-semibold text-ink-50 sm:text-4xl">
-              Two links, so the right people get the right powers
+              Two links, two levels of access
             </h2>
           </AnimatedContent>
 
@@ -357,10 +347,10 @@ export default function Landing() {
                 </h3>
                 <ul className="mt-4 space-y-2.5">
                   {[
-                    "Browse the list on any device",
-                    "Claim a gift so no one doubles up",
+                    "Open the list on any device",
+                    "Claim a gift so nobody doubles up",
                     "Release it again if plans change",
-                    "Can't touch the list itself",
+                    "Cannot change the list itself",
                   ].map((line) => (
                     <li
                       key={line}
@@ -384,10 +374,10 @@ export default function Landing() {
                 </h3>
                 <ul className="mt-4 space-y-2.5">
                   {[
-                    "Add gifts on your behalf",
+                    "Add gifts for you",
                     "Fix titles, details and links",
-                    "Remove anything that's no longer wanted",
-                    "Handy for a partner or a sibling",
+                    "Remove anything you no longer want",
+                    "Useful for a partner or a sibling",
                   ].map((line) => (
                     <li
                       key={line}
@@ -409,12 +399,12 @@ export default function Landing() {
               </span>
               <div className="flex-1">
                 <h3 className="text-xl font-medium text-ink-50">
-                  Keep the surprise, or don't
+                  Keep the surprise
                 </h3>
                 <p className="mt-2 max-w-2xl text-[0.9375rem] leading-relaxed text-ink-400">
-                  One switch decides whether you can see which gifts have been
-                  claimed. Turn it off and the claims stay hidden from you while
-                  your guests still coordinate perfectly.
+                  One switch decides whether you see which gifts are claimed.
+                  Turn it off and your guests still sort it out between them,
+                  you just do not get to watch.
                 </p>
               </div>
               <div className="flex shrink-0 items-center gap-3 rounded-xl border border-ink-700 bg-ink-850 px-4 py-3">
@@ -435,19 +425,17 @@ export default function Landing() {
             <Aurora intensity={0.85} />
             <div className="relative">
               <h2 className="text-3xl font-semibold text-ink-50 sm:text-[2.75rem] sm:leading-tight">
-                Your next birthday can be easy
+                Start your list
               </h2>
               <p className="mx-auto mt-4 max-w-md text-[0.9375rem] leading-relaxed text-ink-300">
-                Set up a list in under a minute and send it to whoever asks what
-                you want.
+                It takes about a minute. Then send it to whoever asks what you
+                want this year.
               </p>
-              <Magnet strength={0.22}>
-                <Link to={primaryHref} className="mt-8 inline-block">
-                  <Button size="lg" icon={PiArrowRightBold}>
-                    {user ? "Open my lists" : "Create your wish list"}
-                  </Button>
-                </Link>
-              </Magnet>
+              <Link to={primaryHref} className="mt-8 inline-block">
+                <Button size="lg" icon={PiArrowRightBold}>
+                  {user ? "Open my lists" : "Create a list"}
+                </Button>
+              </Link>
             </div>
           </div>
         </AnimatedContent>
@@ -457,7 +445,7 @@ export default function Landing() {
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 sm:flex-row">
           <Logo />
           <p className="text-sm text-ink-500">
-            Made for people who hate spreadsheets.
+            Free to use.
           </p>
         </div>
       </footer>
