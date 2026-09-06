@@ -27,7 +27,9 @@ function RoleBanner({ role }) {
   return (
     <div
       className={`flex items-start gap-3 rounded-card border px-4 py-3.5 sm:px-5 ${
-        editor ? "border-ink-700 bg-ink-850/60" : "border-brand-600/30 bg-brand-950/20"
+        editor
+          ? "border-ink-700 bg-ink-850/60"
+          : "border-brand-600/30 bg-brand-950/20"
       }`}
     >
       <span
@@ -40,8 +42,9 @@ function RoleBanner({ role }) {
       <p className="text-sm leading-relaxed text-ink-300">
         {editor ? (
           <>
-            You have an <span className="font-medium text-ink-100">editor link</span> — add, change
-            or remove gifts on the owner's behalf.
+            You have an{" "}
+            <span className="font-medium text-ink-100">editor link</span> — add,
+            change or remove gifts on the owner's behalf.
           </>
         ) : (
           <>
@@ -89,7 +92,9 @@ export default function SharePage() {
 
   const visible = useMemo(() => {
     if (!list) return [];
-    return hideTaken ? list.items.filter((item) => !item.taken || item.taken.mine) : list.items;
+    return hideTaken
+      ? list.items.filter((item) => !item.taken || item.taken.mine)
+      : list.items;
   }, [list, hideTaken]);
 
   const claim = async (name) => {
@@ -142,7 +147,8 @@ export default function SharePage() {
             This link no longer works
           </h1>
           <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink-400">
-            The owner regenerated it, or the list was deleted. Ask them for a fresh link.
+            The owner regenerated it, or the list was deleted. Ask them for a
+            fresh link.
           </p>
           <Link to="/" className="mt-8 inline-block">
             <Button variant="secondary">Learn about Wishly</Button>
@@ -186,7 +192,9 @@ export default function SharePage() {
           {list.title}
         </h1>
         {list.note && (
-          <p className="mt-3 max-w-2xl text-[0.9375rem] leading-relaxed text-ink-300">{list.note}</p>
+          <p className="mt-3 max-w-2xl text-[0.9375rem] leading-relaxed text-ink-300">
+            {list.note}
+          </p>
         )}
 
         <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
@@ -225,7 +233,11 @@ export default function SharePage() {
               )}
             </div>
             {isEditor && (
-              <Button icon={PiPlusBold} onClick={() => openForm()} className="hidden sm:inline-flex">
+              <Button
+                icon={PiPlusBold}
+                onClick={() => openForm()}
+                className="hidden sm:inline-flex"
+              >
                 Add gift
               </Button>
             )}
@@ -244,7 +256,11 @@ export default function SharePage() {
               }
               action={
                 isEditor ? (
-                  <Button icon={PiPlusBold} size="lg" onClick={() => openForm()}>
+                  <Button
+                    icon={PiPlusBold}
+                    size="lg"
+                    onClick={() => openForm()}
+                  >
                     Add a gift
                   </Button>
                 ) : null

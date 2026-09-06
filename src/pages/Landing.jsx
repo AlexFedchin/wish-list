@@ -74,9 +74,25 @@ const STEPS = [
 ];
 
 const PREVIEW = [
-  { title: "Sennheiser Momentum 4", detail: "Black, over-ear", host: "sennheiser.com", taken: false, hot: true },
-  { title: "Espresso tamper, 58mm", detail: "Wooden handle if possible", host: "baristahustle.com", taken: true },
-  { title: "A good film camera book", detail: "Anything on 35mm portraiture", host: null, taken: false },
+  {
+    title: "Sennheiser Momentum 4",
+    detail: "Black, over-ear",
+    host: "sennheiser.com",
+    taken: false,
+    hot: true,
+  },
+  {
+    title: "Espresso tamper, 58mm",
+    detail: "Wooden handle if possible",
+    host: "baristahustle.com",
+    taken: true,
+  },
+  {
+    title: "A good film camera book",
+    detail: "Anything on 35mm portraiture",
+    host: null,
+    taken: false,
+  },
 ];
 
 function LandingNav() {
@@ -93,7 +109,9 @@ function LandingNav() {
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-        scrolled ? "border-b border-ink-800/80 bg-ink-950/80 backdrop-blur-xl" : "border-b border-transparent"
+        scrolled
+          ? "border-b border-ink-800/80 bg-ink-950/80 backdrop-blur-xl"
+          : "border-b border-transparent"
       }`}
     >
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
@@ -206,14 +224,7 @@ export default function Landing() {
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-ink-950" />
 
         <div className="relative mx-auto max-w-6xl">
-          <div className="mx-auto max-w-3xl text-center">
-            <StarBorder className="mb-7">
-              <span className="flex items-center gap-2 px-4 py-1.5 text-xs font-medium text-ink-200">
-                <PiConfettiBold className="text-brand-400" />
-                Birthday coming up?
-              </span>
-            </StarBorder>
-
+          <div className="mx-auto max-w-3xl text-center mt-20">
             <BlurText
               as="h1"
               text="A wish list your friends will actually enjoy using"
@@ -222,36 +233,53 @@ export default function Landing() {
             />
 
             <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-ink-300 sm:text-lg">
-              Put down what you'd love to get, share one link, and let everyone quietly sort out
-              who's buying what. No spreadsheet, no group chat archaeology.
+              Put down what you'd love to get, share one link, and let everyone
+              quietly sort out who's buying what. No spreadsheet, no group chat
+              archaeology.
             </p>
 
             <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Magnet strength={0.25}>
                 <Link to={primaryHref} className="block">
-                  <Button size="lg" icon={PiGiftFill} className="w-full sm:w-auto">
+                  <Button
+                    size="lg"
+                    icon={PiGiftFill}
+                    className="w-full sm:w-auto"
+                  >
                     {user ? "Open my lists" : "Create your wish list"}
                   </Button>
                 </Link>
               </Magnet>
               <a href="#how" className="w-full sm:w-auto">
-                <Button size="lg" variant="secondary" className="w-full sm:w-auto">
+                <Button
+                  size="lg"
+                  variant="secondary"
+                  className="w-full sm:w-auto"
+                >
                   How it works
                 </Button>
               </a>
             </div>
 
-            <p className="mt-5 text-sm text-ink-500">Free, and your guests never need an account.</p>
+            <p className="mt-5 text-sm text-ink-500">
+              Free, and your guests never need an account.
+            </p>
           </div>
 
-          <AnimatedContent delay={0.15} className="mx-auto mt-16 max-w-lg sm:mt-20">
+          <AnimatedContent
+            delay={0.15}
+            className="mx-auto mt-16 max-w-lg sm:mt-20"
+          >
             <PreviewPanel />
           </AnimatedContent>
         </div>
       </section>
 
       {/* How it works */}
-      <section id="how" className="relative border-t border-ink-800/60 px-4 py-20 sm:px-6 sm:py-28">
+      <section
+        id="how"
+        className="relative border-t border-ink-800/60 px-4 py-20 sm:px-6 sm:py-28"
+      >
         <div className="mx-auto max-w-6xl">
           <AnimatedContent>
             <h2 className="max-w-xl text-3xl font-semibold text-ink-50 sm:text-4xl">
@@ -266,8 +294,12 @@ export default function Landing() {
                   <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-brand-600/35 bg-brand-600/10 font-mono text-sm text-brand-300">
                     {String(index + 1).padStart(2, "0")}
                   </span>
-                  <h3 className="mt-5 text-lg font-medium text-ink-50">{step.title}</h3>
-                  <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-400">{step.body}</p>
+                  <h3 className="mt-5 text-lg font-medium text-ink-50">
+                    {step.title}
+                  </h3>
+                  <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-400">
+                    {step.body}
+                  </p>
                 </div>
               </AnimatedContent>
             ))}
@@ -292,8 +324,12 @@ export default function Landing() {
                   <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-ink-700 bg-ink-800 text-xl text-brand-400 transition-shadow duration-300 group-hover:shadow-[0_0_26px_-8px_rgba(124,58,237,0.95)]">
                     <feature.icon />
                   </span>
-                  <h3 className="mt-5 text-[1.0625rem] font-medium text-ink-50">{feature.title}</h3>
-                  <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-400">{feature.body}</p>
+                  <h3 className="mt-5 text-[1.0625rem] font-medium text-ink-50">
+                    {feature.title}
+                  </h3>
+                  <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-400">
+                    {feature.body}
+                  </p>
                 </SpotlightCard>
               </AnimatedContent>
             ))}
@@ -316,7 +352,9 @@ export default function Landing() {
                 <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-600/20 text-xl text-brand-300 shadow-[0_0_28px_-8px_rgba(124,58,237,0.9)]">
                   <PiUsersThreeBold />
                 </span>
-                <h3 className="mt-5 text-xl font-medium text-ink-50">Guest link</h3>
+                <h3 className="mt-5 text-xl font-medium text-ink-50">
+                  Guest link
+                </h3>
                 <ul className="mt-4 space-y-2.5">
                   {[
                     "Browse the list on any device",
@@ -324,7 +362,10 @@ export default function Landing() {
                     "Release it again if plans change",
                     "Can't touch the list itself",
                   ].map((line) => (
-                    <li key={line} className="flex items-start gap-2.5 text-[0.9375rem] text-ink-300">
+                    <li
+                      key={line}
+                      className="flex items-start gap-2.5 text-[0.9375rem] text-ink-300"
+                    >
                       <PiCheckBold className="mt-1 shrink-0 text-brand-400" />
                       {line}
                     </li>
@@ -338,7 +379,9 @@ export default function Landing() {
                 <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-ink-700 bg-ink-800 text-xl text-ink-200">
                   <PiPencilSimpleBold />
                 </span>
-                <h3 className="mt-5 text-xl font-medium text-ink-50">Editor link</h3>
+                <h3 className="mt-5 text-xl font-medium text-ink-50">
+                  Editor link
+                </h3>
                 <ul className="mt-4 space-y-2.5">
                   {[
                     "Add gifts on your behalf",
@@ -346,7 +389,10 @@ export default function Landing() {
                     "Remove anything that's no longer wanted",
                     "Handy for a partner or a sibling",
                   ].map((line) => (
-                    <li key={line} className="flex items-start gap-2.5 text-[0.9375rem] text-ink-300">
+                    <li
+                      key={line}
+                      className="flex items-start gap-2.5 text-[0.9375rem] text-ink-300"
+                    >
                       <PiCheckBold className="mt-1 shrink-0 text-ink-500" />
                       {line}
                     </li>
@@ -362,10 +408,13 @@ export default function Landing() {
                 <PiEyeClosedBold />
               </span>
               <div className="flex-1">
-                <h3 className="text-xl font-medium text-ink-50">Keep the surprise, or don't</h3>
+                <h3 className="text-xl font-medium text-ink-50">
+                  Keep the surprise, or don't
+                </h3>
                 <p className="mt-2 max-w-2xl text-[0.9375rem] leading-relaxed text-ink-400">
-                  One switch decides whether you can see which gifts have been claimed. Turn it off
-                  and the claims stay hidden from you while your guests still coordinate perfectly.
+                  One switch decides whether you can see which gifts have been
+                  claimed. Turn it off and the claims stay hidden from you while
+                  your guests still coordinate perfectly.
                 </p>
               </div>
               <div className="flex shrink-0 items-center gap-3 rounded-xl border border-ink-700 bg-ink-850 px-4 py-3">
@@ -389,7 +438,8 @@ export default function Landing() {
                 Your next birthday can be easy
               </h2>
               <p className="mx-auto mt-4 max-w-md text-[0.9375rem] leading-relaxed text-ink-300">
-                Set up a list in under a minute and send it to whoever asks what you want.
+                Set up a list in under a minute and send it to whoever asks what
+                you want.
               </p>
               <Magnet strength={0.22}>
                 <Link to={primaryHref} className="mt-8 inline-block">
@@ -406,7 +456,9 @@ export default function Landing() {
       <footer className="border-t border-ink-800/60 px-4 py-10 sm:px-6">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 sm:flex-row">
           <Logo />
-          <p className="text-sm text-ink-500">Made for people who hate spreadsheets.</p>
+          <p className="text-sm text-ink-500">
+            Made for people who hate spreadsheets.
+          </p>
         </div>
       </footer>
     </div>

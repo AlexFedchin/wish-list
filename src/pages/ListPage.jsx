@@ -64,7 +64,8 @@ function Settings({ list, onSave, onRegenerateBoth, onDelete }) {
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [confirmingRotate, setConfirmingRotate] = useState(false);
 
-  const dirty = title.trim() !== list.title || note.trim() !== (list.note ?? "");
+  const dirty =
+    title.trim() !== list.title || note.trim() !== (list.note ?? "");
 
   const save = async () => {
     setBusy(true);
@@ -94,7 +95,11 @@ function Settings({ list, onSave, onRegenerateBoth, onDelete }) {
             maxLength={300}
             placeholder="Shown at the top of the shared page."
           />
-          <Button onClick={save} loading={busy} disabled={!dirty || !title.trim()}>
+          <Button
+            onClick={save}
+            loading={busy}
+            disabled={!dirty || !title.trim()}
+          >
             Save changes
           </Button>
         </div>
@@ -113,7 +118,8 @@ function Settings({ list, onSave, onRegenerateBoth, onDelete }) {
         {!list.showTaken && (
           <p className="mt-4 flex items-start gap-2.5 rounded-xl border border-ink-700 bg-ink-900/70 px-4 py-3 text-sm leading-relaxed text-ink-400">
             <PiEyeClosedBold className="mt-0.5 shrink-0 text-brand-400" />
-            Surprise mode is on. Claim badges are hidden from you everywhere in this app.
+            Surprise mode is on. Claim badges are hidden from you everywhere in
+            this app.
           </p>
         )}
       </section>
@@ -134,7 +140,9 @@ function Settings({ list, onSave, onRegenerateBoth, onDelete }) {
       </section>
 
       <section className="rounded-card border border-red-500/25 bg-red-500/[0.04] p-5 sm:p-6">
-        <h2 className="text-base font-semibold text-ink-50">Delete this list</h2>
+        <h2 className="text-base font-semibold text-ink-50">
+          Delete this list
+        </h2>
         <p className="mt-2 text-sm leading-relaxed text-ink-400">
           The gifts and both sharing links are removed for good.
         </p>
@@ -235,7 +243,9 @@ export default function ListPage() {
     try {
       const { list } = await api.rotateLink(id, target);
       setList(list);
-      toast.success(target === "both" ? "Both links regenerated" : "Link regenerated");
+      toast.success(
+        target === "both" ? "Both links regenerated" : "Link regenerated",
+      );
     } catch (err) {
       toast.error(err.message);
     }
@@ -349,7 +359,11 @@ export default function ListPage() {
                 title="Add your first gift"
                 description="A title is all you need. Add a link and a note so nobody has to guess."
                 action={
-                  <Button icon={PiPlusBold} size="lg" onClick={() => openForm()}>
+                  <Button
+                    icon={PiPlusBold}
+                    size="lg"
+                    onClick={() => openForm()}
+                  >
                     Add a gift
                   </Button>
                 }
@@ -370,8 +384,9 @@ export default function ListPage() {
           <div className="mt-6 space-y-4">
             <ShareLinks list={list} onRegenerate={regenerate} />
             <p className="rounded-card border border-ink-800 bg-ink-900/40 px-5 py-4 text-sm leading-relaxed text-ink-400">
-              Anyone with a link can open it — treat them like passwords. If a link ends up
-              somewhere it shouldn't, regenerate it and the old one stops working.
+              Anyone with a link can open it — treat them like passwords. If a
+              link ends up somewhere it shouldn't, regenerate it and the old one
+              stops working.
             </p>
           </div>
         )}
