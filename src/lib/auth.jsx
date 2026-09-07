@@ -35,6 +35,10 @@ export function AuthProvider({ children }) {
       ready,
       signIn: async (email, password) => adopt(await api.login(email, password)),
       signUp: async (email, password) => adopt(await api.register(email, password)),
+      // The server retires every older session, so the reply carries a fresh
+      // token for this device; adopting it keeps the current tab signed in.
+      changePassword: async (currentPassword, newPassword) =>
+        adopt(await api.changePassword(currentPassword, newPassword)),
       signOut: () => {
         setToken(null);
         setUser(null);

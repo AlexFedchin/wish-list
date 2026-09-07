@@ -7,6 +7,7 @@ import Landing from "./pages/Landing";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
+import Account from "./pages/Account";
 import ListPage from "./pages/ListPage";
 import SharePage from "./pages/SharePage";
 import NotFound from "./pages/NotFound";
@@ -66,6 +67,14 @@ export default function App() {
           element={
             <Protected>
               <Dashboard />
+            </Protected>
+          }
+        />
+        <Route
+          path="/app/settings"
+          element={
+            <Protected>
+              <Account />
             </Protected>
           }
         />

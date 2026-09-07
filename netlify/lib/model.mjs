@@ -163,5 +163,11 @@ export async function requireUser(req) {
 
   const user = await getUserByEmail(session.email);
   if (!user || user.id !== session.sub) throw new HttpError("Session is no longer valid", 401);
+  // Changing the password bumps tokenVersion, which retires every session
+  // signed before it. Accounts and tokens from before this existed are both
+  // version 0, so they keep working.
+  if ((session.ver ?? 0) !== (user.tokenVersion ?? 0)) {
+    throw new HttpError("Your password changed. Please sign in again.", 401);
+  }
   return user;
 }

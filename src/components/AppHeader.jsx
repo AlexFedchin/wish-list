@@ -1,6 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import { PiCaretDownBold, PiSignOutBold, PiSquaresFourBold } from "react-icons/pi";
+import {
+  PiCaretDownBold,
+  PiGearSixBold,
+  PiSignOutBold,
+  PiSquaresFourBold,
+} from "react-icons/pi";
 import Logo from "./ui/Logo";
 import Button from "./ui/Button";
 import { useAuth } from "../lib/auth";
@@ -56,6 +61,13 @@ export default function AppHeader() {
                   className="flex h-10 items-center gap-2.5 rounded-lg px-3 text-sm text-ink-200 transition-colors hover:bg-ink-800 hover:text-ink-50"
                 >
                   <PiSquaresFourBold className="text-ink-400" /> My wish lists
+                </Link>
+                <Link
+                  to="/app/settings"
+                  onClick={() => setOpen(false)}
+                  className="flex h-10 items-center gap-2.5 rounded-lg px-3 text-sm text-ink-200 transition-colors hover:bg-ink-800 hover:text-ink-50"
+                >
+                  <PiGearSixBold className="text-ink-400" /> Account settings
                 </Link>
                 <button
                   type="button"

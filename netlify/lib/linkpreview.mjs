@@ -7,12 +7,25 @@
  * they block unknown user agents, they answer product URLs with a 404 status
  * while still serving a complete page, they leave `og:image` present but empty
  * and put the real picture in JSON-LD, and they are slow.
+ *
+ * The one thing a plain fetch cannot answer is bot management. Cloudflare and
+ * friends decide by IP reputation and TLS fingerprint, not by user agent, so a
+ * shop like notino.fi hands Telegram its Open Graph tags and hands us a 403
+ * challenge page no matter what headers we send. That is what READER_ENDPOINT
+ * below is for: a rendering proxy that fetches the page from an address the
+ * shop trusts and hands back the finished HTML. It is only ever reached for
+ * pages a direct fetch could not read, and answers are cached like any other.
  */
 
 const HTML_BUDGET_BYTES = 384 * 1024;
-// Netlify gives a synchronous function 10s in total, so the fetch has to leave
-// room for parsing and the cache write behind it.
-const FETCH_TIMEOUT_MS = 7000;
+// Netlify gives a synchronous function 10s in total, and a blocked page costs
+// two fetches, so neither leg may spend more than about half of it.
+const FETCH_TIMEOUT_MS = 4000;
+const READER_TIMEOUT_MS = 4000;
+
+// Jina's reader. No account needed; JINA_API_KEY only raises the rate limit.
+// Set PREVIEW_READER to "off" to keep every gift link on this site.
+const READER_ENDPOINT = "https://r.jina.ai/";
 
 const LOOKS_LIKE_IMAGE = /\.(avif|gif|jpe?g|png|webp)(?:[?#]|$)/i;
 
@@ -168,6 +181,16 @@ async function readCapped(response) {
   return html;
 }
 
+// Bot walls: an interstitial that is HTML, is not the product page, and often
+// carries a logo we would otherwise mistake for the gift. Recognising one is
+// what sends the request to the reader instead of trusting what came back.
+const BLOCKED_MARKERS =
+  /Just a moment\.\.\.|__cf_chl|cf-browser-verification|Checking your browser|Attention Required!|Enable JavaScript and cookies to continue|Access Denied|Request unsuccessful\. Incapsula|px-captcha|Pardon Our Interruption|are you a robot/i;
+
+const looksBlocked = (status, html) =>
+  (status === 401 || status === 403 || status === 429 || status === 503) &&
+  BLOCKED_MARKERS.test(html.slice(0, 8 * 1024));
+
 export async function fetchPage(url) {
   return fetch(url, {
     redirect: "follow",
@@ -184,22 +207,78 @@ export async function fetchPage(url) {
   });
 }
 
+/**
+ * Asks the reader proxy for the rendered page. Used only after a direct fetch
+ * came back with nothing, which is either a bot wall or a page that paints its
+ * meta tags in the browser.
+ */
+async function fetchThroughReader(url) {
+  if ((process.env.PREVIEW_READER || "").toLowerCase() === "off") return "";
+
+  const key = process.env.JINA_API_KEY;
+  const response = await fetch(READER_ENDPOINT + url.toString(), {
+    redirect: "follow",
+    signal: AbortSignal.timeout(READER_TIMEOUT_MS),
+    headers: {
+      // Markdown is the reader's default and drops <meta>, which is the part
+      // we came for.
+      "x-return-format": "html",
+      accept: "text/html,*/*;q=0.8",
+      ...(key ? { authorization: `Bearer ${key}` } : {}),
+    },
+  });
+
+  // A rate-limited or failing proxy is just another way of having no picture.
+  if (!response.ok) return "";
+  return readCapped(response);
+}
+
+/** First absolute, public image URL in `html`, resolved against `base`. */
+function imageFrom(html, base) {
+  const candidate = findImage(html);
+  if (!candidate) return "";
+  return publicUrl(candidate, base)?.toString() ?? "";
+}
+
 /** Resolves the image behind a page URL, or "" when there is nothing to show. */
 export async function scrapeImage(url) {
   if (LOOKS_LIKE_IMAGE.test(url.pathname)) return url.toString();
 
-  const response = await fetchPage(url);
+  let landed = url.toString();
 
-  const type = response.headers.get("content-type") || "";
-  if (type.startsWith("image/")) return response.url || url.toString();
-  if (type && !type.includes("html") && !type.includes("xml")) return "";
+  try {
+    const response = await fetchPage(url);
 
-  // Deliberately not gated on response.ok: several retailers answer a perfectly
-  // good product page with a 404 or 410 status, tags and all.
-  const candidate = findImage(await readCapped(response));
-  if (!candidate) return "";
+    const type = response.headers.get("content-type") || "";
+    if (type.startsWith("image/")) return response.url || landed;
+    if (!type || type.includes("html") || type.includes("xml")) {
+      // Relative paths resolve against the page we actually landed on, which
+      // may differ from the requested URL after redirects.
+      landed = response.url || landed;
+      const html = await readCapped(response);
+      // Deliberately not gated on response.ok: several retailers answer a
+      // perfectly good product page with a 404 or 410 status, tags and all.
+      // A challenge page is the exception — whatever picture it carries is the
+      // bot wall's, not the gift's.
+      if (!looksBlocked(response.status, html)) {
+        const found = imageFrom(html, landed);
+        if (found) return found;
+      }
+    } else {
+      // A PDF, a zip, something we can't read a picture out of. The reader
+      // proxy would not do any better.
+      return "";
+    }
+  } catch (err) {
+    // A refused connection or a timeout still leaves the reader worth a try.
+    console.warn("direct fetch failed for", url.hostname, err?.name || err);
+  }
 
-  // Relative paths resolve against the page we actually landed on, which may
-  // differ from the requested URL after redirects.
-  return publicUrl(candidate, response.url || url.toString())?.toString() ?? "";
+  try {
+    const html = await fetchThroughReader(url);
+    return html ? imageFrom(html, landed) : "";
+  } catch (err) {
+    console.warn("reader failed for", url.hostname, err?.name || err);
+    return "";
+  }
 }

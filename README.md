@@ -37,6 +37,13 @@ services to sign up for.
 
    Without it the app still runs, but every session token is signed with a known
    fallback secret, so set it before you share anything.
+
+   Two optional ones, both about gift-link pictures (see *Link previews* below):
+
+   ```
+   JINA_API_KEY = <key>    # raises the reader's rate limit; anonymous works too
+   PREVIEW_READER = off    # never send a gift link to the reader at all
+   ```
 4. Deploy. Netlify Blobs is enabled automatically; there is no database step.
 
 ## Running locally
@@ -65,6 +72,7 @@ which is what keeps the dev proxy's `.html` probing from re-entering them.
 | `POST`   | `/api/auth/register`             | anyone     |
 | `POST`   | `/api/auth/login`                | anyone     |
 | `GET`    | `/api/auth/me`                   | author     |
+| `POST`   | `/api/auth/password`             | author     |
 | `GET`    | `/api/lists`                     | author     |
 | `POST`   | `/api/lists`                     | author     |
 | `GET`    | `/api/lists/:id`                 | author     |
@@ -99,6 +107,26 @@ seeing claims, so coordination still works. The author literally cannot see them
 can release a gift they claimed. That id is never returned to other visitors, only the
 API only tells you whether a claim is yours (`taken.mine`).
 
+**Changing a password signs out everywhere else.** Sessions are stateless
+tokens, so there is nothing to delete server-side. Instead each user record
+carries a `tokenVersion` that the session token repeats back as `ver`;
+`POST /api/auth/password` bumps it, which retires every token signed before the
+change. The reply carries a freshly signed one, so the browser that made the
+change stays signed in and every other device has to sign in again. Accounts and
+tokens predating this are both version 0, so nothing already issued broke.
+
+**Link previews.** `/api/preview?url=` scrapes the picture a shop page
+advertises to unfurlers — Open Graph first, then Twitter cards, JSON-LD and
+`link rel`. Two things it cannot do alone: Cloudflare-style bot management (which
+judges IP reputation and TLS fingerprints, not user agents, and hands Telegram
+the tags while handing a serverless function a challenge page) and pages that
+only paint their meta tags in the browser. So when a direct fetch comes back
+blocked or empty, the scraper asks [Jina's reader](https://r.jina.ai) for the
+rendered HTML and parses that instead. No account is needed; `JINA_API_KEY` only
+raises the rate limit, and `PREVIEW_READER=off` disables the second leg
+entirely, at the cost of losing previews on bot-walled shops. Answers, hits and
+misses alike, are cached in blobs, so a link is only ever scraped once.
+
 **Concurrent claims.** Two guests claiming different gifts at the same moment would
 otherwise clobber each other, since a list is one blob. `updateList` reads with
 strong consistency and writes with `onlyIfMatch: <etag>`, retrying on a mismatch, so
@@ -108,7 +136,7 @@ neither write is lost. A second guest claiming the *same* gift gets a `409`.
 
 Four Netlify Blobs stores, all read with strong consistency:
 
-- `wl_users`, key: email → `{ id, email, passwordHash, createdAt }`
+- `wl_users`, key: email → `{ id, email, passwordHash, tokenVersion, createdAt }`
 - `wl_lists`, key: list id → the list, items included
 - `wl_user_lists`, key: user id → `{ listIds }`
 - `wl_share_tokens`, key: share token → `{ listId, role }`
@@ -127,6 +155,6 @@ src/
     reactbits/  Aurora, DotGrid, SpotlightCard, BlurText, ClickSpark, Magnet, StarBorder, AnimatedContent
     ui/         Button, Field, Modal, Switch, ConfirmDialog, EmptyState, Loader, Logo
     wishlist/   WishItem, ItemGrid, ItemForm, ClaimDialog, ShareLinks, ViewToggle
-  pages/        Landing, AuthShell, Dashboard, ListPage, SharePage, NotFound
+  pages/        Landing, AuthShell, Dashboard, Account, ListPage, SharePage, NotFound
   lib/          api client, auth context, toasts
 ```

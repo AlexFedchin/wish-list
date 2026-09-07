@@ -85,6 +85,8 @@ export const api = {
   login: (email, password) =>
     request("/auth/login", { method: "POST", body: { email, password }, auth: false }),
   me: () => request("/auth/me"),
+  changePassword: (currentPassword, newPassword) =>
+    request("/auth/password", { method: "POST", body: { currentPassword, newPassword } }),
 
   lists: () => request("/lists"),
   createList: (data) => request("/lists", { method: "POST", body: data }),
